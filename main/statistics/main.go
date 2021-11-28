@@ -1,0 +1,65 @@
+package main
+
+import (
+	"fmt"
+	"time"
+	"workProject/widget/utils"
+	"workProject/widget/logic/statistics"
+)
+/*
+	三张表
+	widgetStatistics (除去created_at,updated_at以外，其他的都是int类型)
+		id,widgetId,countryId,version,deviceId,show,click,create,add,created_at,updated_at
+	country
+		id,title,created_at,updated_at
+	device
+		id,title,created_at,updated_at
+*/
+/*
+   执行哪一天的数据
+   根据 vcname in (widgetShow,widgetClick,widgetAdd,widgetCreate) & version != 90909从表里拿数据
+   遍历  分组 
+		 key = designName^country^version^device
+		 val = widgetShow,widgetClick,widgetAdd,widgetCreate 统计数
+	插入
+		统计表，country表,device表
+*/
+func main(){
+	// all();
+	yesterday()
+}
+
+/*
+	从8.5开始
+	截止到昨天
+*/
+func all(){
+	var cstSh, _ = time.LoadLocation("Asia/Shanghai");
+	startTime := "2021-08-05";
+	// startTime := "2021-09-13";
+
+	endTime   := time.Now().In(cstSh).AddDate(0, 0, -1).Format("2006-01-02");
+	// endTime   := "2021-09-16"
+	days      := utils.GetDaysDiffer(startTime, endTime)//看差了几天
+	var i int64
+	iTime := startTime
+	// statistics.Run(startTime)
+	oneDay,_ := time.ParseDuration("24h")
+	for i = 1; i <= days; i++ {
+		day, _ := time.ParseInLocation("2006-01-02", iTime,time.Local)
+	
+		iTime := day.Add(oneDay).Format("2006-01-02")
+		fmt.Println(iTime)	
+		statistics.Run(iTime)
+		// fmt.Printf("i type:%t,oneDay:%t",i,oneDay)
+		oo,_ := time.ParseDuration("24h")
+		oneDay += oo
+
+	}
+}
+
+func yesterday(){
+	var cstSh, _ = time.LoadLocation("Asia/Shanghai");
+	Time   := time.Now().In(cstSh).AddDate(0, 0, -1).Format("2006-01-02");
+	statistics.Run(Time)
+}
