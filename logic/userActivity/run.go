@@ -2,7 +2,7 @@ package userActivity
 
 import (
 	"fmt"
-	"workProject/widget/model/statistics"
+	"workProject/widget/model/userActivity"
 	"reflect"
 	"encoding/json"
 	"strings"
@@ -13,27 +13,28 @@ var date string
 var originalData []interface{};
 
 var handleData map[string]map[string]int
-
+// var handleData map[string]map[int]string
 
 func Run(days string) {
-	fmt.Println(days)
-	// getOriginalData(days);
-	// getHandleData();
-	// insertData();
+	getOriginalData(days);
+	getHandleData();
+	insertData();
 }
 
 func getOriginalData(days string){
 	date = days
-	originalData = statistics.OptionQueryMulti(days)
+	originalData = userActivity.OptionQueryMulti(days)
 }
 
 func getHandleData(){
 	handleData = make(map[string]map[string]int);
+	// handleData = make(map[string]map[int]string);
+
 
 	for i := 0; i < len(originalData); i++ {
 		item   := reflect.ValueOf(originalData[i])
 		param  := item.FieldByName("param")
-		vcname := fmt.Sprintf("%s",item.FieldByName("vcname"))
+		udid   := fmt.Sprintf("%s",item.FieldByName("udid"))
 
 		//取字符串json里的数据  先转成map 再取出来
 		var p map[string]interface{}
@@ -42,16 +43,21 @@ func getHandleData(){
 		keystr := fmt.Sprintf("%s^%s^%s^%s",p["designName"],item.FieldByName("country"),item.FieldByName("device"),item.FieldByName("version"))
 
 		if _, ok := handleData[keystr]; !ok{
-			//新增一个
-			oneData := make(map[string]int)//一维数组重置
-			oneData["widgetClick"]  = 0
-			oneData["widgetAdd"]    = 0
-			oneData["widgetCreate"] = 0
-			oneData["widgetShow"]   = 0
-			handleData[keystr] = oneData
+			//在这个条件下 这个人出现过没有 如果没有把这个人加上
+			if _,okk := handleData[keystr][udid]; !okk {
+				oneData := make(map[string]int);
+				oneData[udid]  = 0
+				handleData[keystr] = oneData
+			}
+	
+		}else{
+			appendData := make(map[string]int);
+			appendData = handleData[keystr]
+			appendData[udid]  = 0
+			handleData[keystr] = appendData
 		}
-		// 看是要增加哪个
-		handleData[keystr][vcname] += 1
+		// 看这个人出现了几次
+		handleData[keystr][udid] += 1
 	}
 }
 
@@ -63,6 +69,12 @@ func insertData(){
 		if widgetId <= 0{
 			continue
 		}
+		// if indexArr[0] == "Colorful_22_S"{
+		// 	fmt.Printf("colorful_22_S len:%b",len(item))
+		// }
+		// if len(item) > 1{
+		// 	fmt.Println(len(item))
+		// }
 
 		/*
 			version,show,click,add,create 转int
@@ -71,15 +83,10 @@ func insertData(){
 		*/
 		insertWidgetS := make(map[string]interface{});
 		insertWidgetS["widgetId"]  = widgetId;
-		insertWidgetS["add"]       = int64(item["widgetAdd"]);
-		insertWidgetS["show"]      = int64(item["widgetShow"]);
-		insertWidgetS["create"]    = int64(item["widgetCreate"]);
-		insertWidgetS["click"]     = int64(item["widgetClick"]);
+		insertWidgetS["userCount"] = int64(len(item));
 		insertWidgetS["countryId"] = getCountryId(indexArr[1]);
 		insertWidgetS["deviceId"]  = getDeviceId(indexArr[2]);
 		insertWidgetS["version"],_ = strconv.ParseInt(indexArr[3], 10, 64)
-
-
 		insertWidgetS["created_at"] = fmt.Sprintf("%s",date)
 		insertWidgetS["updated_at"] = fmt.Sprintf("%s",date)
 		fmt.Println(insertWidgetS)
@@ -87,28 +94,28 @@ func insertData(){
 		/*
 		 	插到表里去
 		*/
-		// res := statistics.WidgetStatisInsert(insertWidgetS)
+		res := userActivity.UserActivityInsert(insertWidgetS)
 		fmt.Printf("insert res :%v",res)
 	}
 }
 
 func getWidgetId(design string) (id int64) {
-	id = statistics.WidgetQueryOne(design)
+	id = userActivity.WidgetQueryOne(design)
 	return id
 }
 
 func getDeviceId(title string) (id int64) {
-	id = statistics.DeviceQueryOne(title)
+	id = userActivity.DeviceQueryOne(title)
 	if id <= 0 {
-	  id = statistics.DeviceInsert(title)
+	  id = userActivity.DeviceInsert(title)
 	}
 	return id
 }
 
 func getCountryId(title string) (id int64) {
-	id = statistics.CountryQueryOne(title)
+	id = userActivity.CountryQueryOne(title)
 	if id <= 0 {
-	  id = statistics.CountryInsert(title)
+	  id = userActivity.CountryInsert(title)
 	}
 	return id
 }
