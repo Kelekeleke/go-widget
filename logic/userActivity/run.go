@@ -39,6 +39,9 @@ func getHandleData(){
 		//取字符串json里的数据  先转成map 再取出来
 		var p map[string]interface{}
 		json.Unmarshal([]byte(fmt.Sprintf("%s",param)), &p)
+		if _,a := p["designName"]; !a {
+				p["designName"] = "notDesign"
+		}
 
 		keystr := fmt.Sprintf("%s^%s^%s^%s",p["designName"],item.FieldByName("country"),item.FieldByName("device"),item.FieldByName("version"))
 
@@ -67,7 +70,7 @@ func insertData(){
 
 		widgetId := getWidgetId(indexArr[0])
 		if widgetId <= 0{
-			continue
+			widgetId = 0;
 		}
 		// if indexArr[0] == "Colorful_22_S"{
 		// 	fmt.Printf("colorful_22_S len:%b",len(item))
@@ -94,8 +97,8 @@ func insertData(){
 			/*
 				插到表里去
 			*/
-			res := userActivity.UserActivityInsert(insertWidgetS)
-			fmt.Printf("insert res :%v",res)
+			// res := userActivity.UserActivityInsert(insertWidgetS)
+			// fmt.Printf("insert res :%v",res)
 		}
 
 	}

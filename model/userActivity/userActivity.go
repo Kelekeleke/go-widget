@@ -22,7 +22,7 @@ func UserActivityInsert(insertArr map[string]interface{})  (id int64) {
 			valsArr = append(valsArr, fmt.Sprintf("'%v'",v))
 		}
 	}
-    sqlStr := `insert into userActivityUdid(` + strings.Join(keysArr, ", ") + `) values(` + strings.Join(valsArr, ",") + `)`
+    sqlStr := `insert into userActivityUdid1(` + strings.Join(keysArr, ", ") + `) values(` + strings.Join(valsArr, ",") + `)`
 	fmt.Println(sqlStr)
     // 2. exec
     ret, err := db.Exec(sqlStr) //exec执行（Python中的exec就是执行字符串代码的，返回值是None，eval有返回值）
