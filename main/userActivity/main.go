@@ -22,8 +22,8 @@ import (
 func main(){
 	// endTime   := "2021-10-15"
 	// userActivity.Run(endTime)
-	all();
-	// yesterday();
+	// all();
+	yesterday();
 }
 
 /*
