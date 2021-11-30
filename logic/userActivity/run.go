@@ -75,27 +75,29 @@ func insertData(){
 		// if len(item) > 1{
 		// 	fmt.Println(len(item))
 		// }
+		for kk,_ := range item{
+			/*
+				version,show,click,add,create 转int
+				country 看是否在表里 不在就更新拿id 在的话直接拿id
+				device  看是否在表里 不在就更新拿id 在的话直接拿id
+			*/
+			insertWidgetS := make(map[string]interface{});
+			insertWidgetS["widgetId"]  = widgetId;
+			insertWidgetS["udid"]      = fmt.Sprintf("%s",kk)
+			insertWidgetS["countryId"] = getCountryId(indexArr[1]);
+			insertWidgetS["deviceId"]  = getDeviceId(indexArr[2]);
+			insertWidgetS["version"],_ = strconv.ParseInt(indexArr[3], 10, 64)
+			insertWidgetS["created_at"] = fmt.Sprintf("%s",date)
+			insertWidgetS["updated_at"] = fmt.Sprintf("%s",date)
+			fmt.Println(insertWidgetS)
 
-		/*
-			version,show,click,add,create 转int
-			country 看是否在表里 不在就更新拿id 在的话直接拿id
-			device  看是否在表里 不在就更新拿id 在的话直接拿id
-		*/
-		insertWidgetS := make(map[string]interface{});
-		insertWidgetS["widgetId"]  = widgetId;
-		insertWidgetS["userCount"] = int64(len(item));
-		insertWidgetS["countryId"] = getCountryId(indexArr[1]);
-		insertWidgetS["deviceId"]  = getDeviceId(indexArr[2]);
-		insertWidgetS["version"],_ = strconv.ParseInt(indexArr[3], 10, 64)
-		insertWidgetS["created_at"] = fmt.Sprintf("%s",date)
-		insertWidgetS["updated_at"] = fmt.Sprintf("%s",date)
-		fmt.Println(insertWidgetS)
+			/*
+				插到表里去
+			*/
+			res := userActivity.UserActivityInsert(insertWidgetS)
+			fmt.Printf("insert res :%v",res)
+		}
 
-		/*
-		 	插到表里去
-		*/
-		res := userActivity.UserActivityInsert(insertWidgetS)
-		fmt.Printf("insert res :%v",res)
 	}
 }
 

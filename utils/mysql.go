@@ -13,7 +13,7 @@ var MysqlDbErr error
 
 const (
 	USER_NAME = "alpha_game"
-	PASS_WORD = "alphaiu654321"
+	PASS_WORD = "alphaiu654321"//alphaiu654321
 	HOST      = "alphagame.cpnupr9lfkqf.us-east-1.rds.amazonaws.com"
 	PORT      = "3306"
 	DATABASE  = "yuumi"
