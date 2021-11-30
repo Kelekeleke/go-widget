@@ -20,9 +20,9 @@ import (
 		统计表
 */
 func main(){
-	endTime   := "2021-10-15"
-	userActivity.Run(endTime)
-	// all();
+	// endTime   := "2021-10-15"
+	// userActivity.Run(endTime)
+	all();
 	// yesterday();
 }
 

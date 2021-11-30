@@ -16,8 +16,10 @@ func UserActivityInsert(insertArr map[string]interface{})  (id int64) {
 	var valsArr []string
 	for k, v := range insertArr {
 		keysArr = append(keysArr, "`" + k + "`")
-		if k != "created_at" && k != "updated_at"{
+		if k != "created_at" && k != "updated_at" && k != "udid"{
 			valsArr = append(valsArr, fmt.Sprintf("'%d'",v))
+		}else if k == "udid"{
+			valsArr = append(valsArr, fmt.Sprintf("'%s'",v))
 		}else{
 			valsArr = append(valsArr, fmt.Sprintf("'%v'",v))
 		}

@@ -23,7 +23,7 @@ func OptionQueryMulti(days string) (res []interface{}) {
 	db := utils.MysqlDb
 	table := "operation_flow_" + days + "_Widgett";	
 
-	sql := "select version,device,country,param,udid,vcname from `" + table + "` where version != 90909 "
+	sql := "select version,device,country,param,udid,vcname from `" + table + "` where version != 90909"
 	rows,err:= db.Query(sql)
 	
 	defer func() {

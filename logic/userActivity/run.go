@@ -97,8 +97,8 @@ func insertData(){
 			/*
 				插到表里去
 			*/
-			// res := userActivity.UserActivityInsert(insertWidgetS)
-			// fmt.Printf("insert res :%v",res)
+			res := userActivity.UserActivityInsert(insertWidgetS)
+			fmt.Printf("insert res :%v",res)
 		}
 
 	}
