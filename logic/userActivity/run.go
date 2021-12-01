@@ -40,7 +40,10 @@ func getHandleData(){
 		var p map[string]interface{}
 		json.Unmarshal([]byte(fmt.Sprintf("%s",param)), &p)
 		if _,a := p["designName"]; !a {
-				p["designName"] = "notDesign"
+			if len(p) <= 0{
+				p = make(map[string]interface{})
+			}
+			p["designName"] = "notDesign"
 		}
 
 		keystr := fmt.Sprintf("%s^%s^%s^%s",p["designName"],item.FieldByName("country"),item.FieldByName("device"),item.FieldByName("version"))
